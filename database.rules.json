@@ -24,7 +24,7 @@
     },
     "status": {
       "$user_id": {
-        ".read": "$user_id === auth.uid",
+        ".read": "auth !== null",
         ".write": "$user_id === auth.uid"
       }
     },
