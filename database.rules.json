@@ -31,6 +31,12 @@
         ".write": "$user_id === auth.uid"
       }
     },
+    "fcm_tokens": {
+      "$token_id": {
+        ".read": false,
+        ".write": "newData.val() === auth.uid"
+      }
+    },
     ".read": false,
     ".write": false
   }
