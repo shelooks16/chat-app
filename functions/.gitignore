@@ -1,2 +1,3 @@
 node_modules/
 service-account.json
+*.log

@@ -3,9 +3,8 @@
     // Required for certain syntax usages
     "ecmaVersion": 2017
   },
-  "plugins": [
-    "promise"
-  ],
+  "root": true,
+  "plugins": ["promise"],
   "extends": "eslint:recommended",
   "rules": {
     // Removed rule "disallow the use of console" from recommended eslint rules
@@ -30,7 +29,7 @@
     "no-template-curly-in-string": 1,
 
     // Warn if return statements do not either always or never specify values
-    "consistent-return": 1,
+    "consistent-return": 0,
 
     // Warn if no return statements in callbacks of array methods
     "array-callback-return": 1,
@@ -56,7 +55,7 @@
     // Warn against unnecessary calls to .bind()
     "no-extra-bind": 1,
 
-    // Warn against unnecessary labels    
+    // Warn against unnecessary labels
     "no-extra-label": 1,
 
     // Disallow leading or trailing decimal points in numeric literals
@@ -111,7 +110,7 @@
     "prefer-arrow-callback": 1,
 
     // Return inside each then() to create readable and reusable Promise chains.
-    // Forces developers to return console logs and http calls in promises. 
+    // Forces developers to return console logs and http calls in promises.
     "promise/always-return": 2,
 
     //Enforces the use of catch() on un-returned promises
