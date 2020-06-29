@@ -32,6 +32,7 @@
       }
     },
     "fcm_tokens": {
+      ".indexOn": ".value",
       "$token_id": {
         ".read": false,
         ".write": "newData.val() === auth.uid"
