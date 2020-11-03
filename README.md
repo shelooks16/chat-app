@@ -16,7 +16,7 @@ Stack:
 ### Pull and install
 
 1. Clone this repo by running `git clone https://github.com/shelooks16/chat-app.git`
-2. Install dependencies for both cloud functions and React frontend by running `npm run i && cd functions && npm run i`
+2. Install dependencies for both cloud functions and React frontend by running `npm install && cd functions && npm install`
 
 ### Important
 
@@ -34,7 +34,9 @@ different NodeJS versions.
 ### Run frontend locally
 
 1. Inside `src/misc/firebase.js` replace config with your firebase project config.
-2. Run `npm run start` and develop :)
+2. Get FCM vapid key for real-time notificaitons from `Firebase dashboard > Cog icon > Project Settings > Cloud Messaging > Web push certificates > Key pair`
+   and put it as `fcmVapidKey` inside `src/misc/firebase.js`.
+3. Run `npm run start` and develop :)
 
 If you have problems with `node-sass`, just update the package to other version.
 
