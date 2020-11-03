@@ -17,6 +17,9 @@ const config = {
   appId: '1:167319830934:web:419e220f9fdcd15ea25db7',
 };
 
+export const fcmVapidKey =
+  'BLs_I-HQyrAuUJJh8H3U0vtHGhVhXLMqoVoomeNL90GMKm0-o7sSoN9CJYRiBAVz-Yi7ZAni8mKateJfDwodTnw';
+
 const app = firebase.initializeApp(config);
 export const auth = app.auth();
 export const database = app.database();
@@ -28,10 +31,6 @@ export const messaging = firebase.messaging.isSupported()
   : null;
 
 if (messaging) {
-  messaging.usePublicVapidKey(
-    'BLs_I-HQyrAuUJJh8H3U0vtHGhVhXLMqoVoomeNL90GMKm0-o7sSoN9CJYRiBAVz-Yi7ZAni8mKateJfDwodTnw'
-  );
-
   messaging.onMessage(({ notification }) => {
     const { title, body } = notification;
     Toast.info({ title, description: body, duration: 0 });
@@ -39,5 +38,5 @@ if (messaging) {
 }
 
 if (isLocalhost) {
-  functions.useFunctionsEmulator('http://localhost:5001');
+  functions.useEmulator('localhost', 5001);
 }
