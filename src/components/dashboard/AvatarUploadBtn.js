@@ -1,6 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Button, Alert } from 'rsuite';
 import AvatarEditor from 'react-avatar-editor';
+import {
+  getDownloadURL,
+  ref as storageRef,
+  uploadBytes,
+} from 'firebase/storage';
+import { ref as dbRef, update } from 'firebase/database';
 import { useModalState } from '../../misc/custom-hooks';
 import { storage, database } from '../../misc/firebase';
 import { useProfile } from '../../context/profile.context';
@@ -55,15 +61,16 @@ const AvatarUploadBtn = () => {
     try {
       const blob = await getBlob(canvas);
 
-      const avatarFileRef = storage
-        .ref(`/profile/${profile.uid}`)
-        .child('avatar');
+      const avatarFileRef = storageRef(
+        storage,
+        `/profile/${profile.uid}/avatar`
+      );
 
-      const uploadAvatarResult = await avatarFileRef.put(blob, {
+      await uploadBytes(avatarFileRef, blob, {
         cacheControl: `public, max-age=${3600 * 24 * 3}`,
       });
 
-      const downloadUrl = await uploadAvatarResult.ref.getDownloadURL();
+      const downloadUrl = await getDownloadURL(avatarFileRef);
 
       const updates = await getUserUpdates(
         profile.uid,
@@ -72,7 +79,7 @@ const AvatarUploadBtn = () => {
         database
       );
 
-      await database.ref().update(updates);
+      await update(dbRef(database), updates);
 
       setIsLoading(false);
       Alert.info('Avatar has been uploaded', 4000);

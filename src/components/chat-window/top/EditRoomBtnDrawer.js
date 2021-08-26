@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Button, Drawer, Alert } from 'rsuite';
 import { useParams } from 'react-router';
+import { ref, set } from 'firebase/database';
 import { useModalState, useMediaQuery } from '../../../misc/custom-hooks';
 import EditableInput from '../../EditableInput';
 import { useCurrentRoom } from '../../../context/current-room.context';
@@ -15,10 +16,7 @@ const EditRoomBtnDrawer = () => {
   const description = useCurrentRoom(v => v.description);
 
   const updateData = (key, value) => {
-    database
-      .ref(`rooms/${chatId}`)
-      .child(key)
-      .set(value)
+    set(ref(database, `rooms/${chatId}/${key}`), value)
       .then(() => {
         Alert.success('Successfully updated', 4000);
       })

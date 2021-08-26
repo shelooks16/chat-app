@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { InputGroup, Input, Icon, Alert } from 'rsuite';
-import firebase from 'firebase/app';
+import { serverTimestamp, ref, push, update } from 'firebase/database';
 import { useParams } from 'react-router';
 import { useProfile } from '../../../context/profile.context';
 import { database } from '../../../misc/firebase';
@@ -16,7 +16,7 @@ function assembleMessage(profile, chatId) {
       createdAt: profile.createdAt,
       ...(profile.avatar ? { avatar: profile.avatar } : {}),
     },
-    createdAt: firebase.database.ServerValue.TIMESTAMP,
+    createdAt: serverTimestamp(),
     likeCount: 0,
   };
 }
@@ -42,7 +42,7 @@ const Bottom = () => {
 
     const updates = {};
 
-    const messageId = database.ref('messages').push().key;
+    const messageId = push(ref(database, 'messages')).key;
 
     updates[`/messages/${messageId}`] = msgData;
     updates[`/rooms/${chatId}/lastMessage`] = {
@@ -52,7 +52,7 @@ const Bottom = () => {
 
     setIsLoading(true);
     try {
-      await database.ref().update(updates);
+      await update(ref(database), updates);
 
       setInput('');
       setIsLoading(false);
@@ -79,7 +79,7 @@ const Bottom = () => {
         const msgData = assembleMessage(profile, window.chatId);
         msgData.file = file;
 
-        const messageId = database.ref('messages').push().key;
+        const messageId = push(ref(database, 'messages')).key;
 
         updates[`/messages/${messageId}`] = msgData;
       });
@@ -92,7 +92,7 @@ const Bottom = () => {
       };
 
       try {
-        await database.ref().update(updates);
+        await update(ref(database), updates);
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
