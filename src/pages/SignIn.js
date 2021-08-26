@@ -6,7 +6,7 @@ import {
   getAdditionalUserInfo,
 } from 'firebase/auth';
 import { Container, Grid, Row, Panel, Col, Button, Icon, Alert } from 'rsuite';
-import { ref, serverTimestamp } from 'firebase/database';
+import { ref, serverTimestamp, set } from 'firebase/database';
 import { auth, database } from '../misc/firebase';
 
 const SignIn = () => {
@@ -16,7 +16,7 @@ const SignIn = () => {
       const userMeta = getAdditionalUserInfo(credential);
 
       if (userMeta.isNewUser) {
-        await ref(database, `/profiles/${credential.user.uid}`).set({
+        await set(ref(database, `/profiles/${credential.user.uid}`), {
           name: credential.user.displayName,
           createdAt: serverTimestamp(),
         });
