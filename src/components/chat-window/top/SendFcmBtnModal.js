@@ -11,6 +11,7 @@ import {
   Schema,
   Alert,
 } from 'rsuite';
+import { httpsCallable } from 'firebase/functions';
 import { useModalState } from '../../../misc/custom-hooks';
 import { functions } from '../../../misc/firebase';
 
@@ -46,7 +47,7 @@ const SendFcmBtnModal = () => {
     setIsLoading(true);
 
     try {
-      const sendFcm = functions.httpsCallable('sendFcm');
+      const sendFcm = httpsCallable(functions, 'sendFcm');
       await sendFcm({ chatId, ...formValue });
 
       setIsLoading(false);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconButton, Icon, Modal, Button } from 'rsuite';
+import { ref, remove, set } from 'firebase/database';
 import { useParams } from 'react-router';
 import { useCurrentRoom } from '../../../context/current-room.context';
 import { useModalState } from '../../../misc/custom-hooks';
@@ -11,17 +12,14 @@ const AskFcmBtnModal = () => {
   const { isOpen, close, open } = useModalState();
 
   const onAccept = () => {
-    database
-      .ref(`/rooms/${chatId}/fcmUsers`)
-      .child(auth.currentUser.uid)
-      .set(true);
+    set(
+      ref(database, `/rooms/${chatId}/fcmUsers/${auth.currentUser.uid}`),
+      true
+    );
   };
 
   const onCancel = () => {
-    database
-      .ref(`/rooms/${chatId}/fcmUsers`)
-      .child(auth.currentUser.uid)
-      .remove();
+    remove(ref(database, `/rooms/${chatId}/fcmUsers/${auth.currentUser.uid}`));
   };
 
   return (

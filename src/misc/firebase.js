@@ -1,10 +1,10 @@
 import { Notification as Toast } from 'rsuite';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import 'firebase/storage';
-import 'firebase/messaging';
-import 'firebase/functions';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
+import { getStorage } from 'firebase/storage';
+import { getMessaging, isSupported, onMessage } from 'firebase/messaging';
+import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import { isLocalhost } from './helpers';
 
 const config = {
@@ -20,23 +20,21 @@ const config = {
 export const fcmVapidKey =
   'BLs_I-HQyrAuUJJh8H3U0vtHGhVhXLMqoVoomeNL90GMKm0-o7sSoN9CJYRiBAVz-Yi7ZAni8mKateJfDwodTnw';
 
-const app = firebase.initializeApp(config);
-export const auth = app.auth();
-export const database = app.database();
-export const storage = app.storage();
-export const functions = app.functions('europe-west3');
+const app = initializeApp(config);
+export const auth = getAuth(app);
+export const database = getDatabase(app);
+export const storage = getStorage(app);
+export const functions = getFunctions(app, 'europe-west3');
 
-export const messaging = firebase.messaging.isSupported()
-  ? app.messaging()
-  : null;
+export const messaging = isSupported() ? getMessaging(app) : null;
 
 if (messaging) {
-  messaging.onMessage(({ notification }) => {
+  onMessage(messaging, ({ notification }) => {
     const { title, body } = notification;
     Toast.info({ title, description: body, duration: 0 });
   });
 }
 
 if (isLocalhost) {
-  functions.useEmulator('localhost', 5001);
+  connectFunctionsEmulator(functions, 'localhost', 5001);
 }

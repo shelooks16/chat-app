@@ -10,7 +10,7 @@ import {
   Schema,
   Alert,
 } from 'rsuite';
-import firebase from 'firebase/app';
+import { serverTimestamp, ref, push } from 'firebase/database';
 import { useModalState } from '../misc/custom-hooks';
 import { database, auth } from '../misc/firebase';
 
@@ -46,7 +46,7 @@ const CreateRoomBtnModal = () => {
 
     const newRoomdata = {
       ...formValue,
-      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      createdAt: serverTimestamp(),
       admins: {
         [auth.currentUser.uid]: true,
       },
@@ -56,7 +56,7 @@ const CreateRoomBtnModal = () => {
     };
 
     try {
-      await database.ref('rooms').push(newRoomdata);
+      await push(ref(database, 'rooms'), newRoomdata);
 
       Alert.info(`${formValue.name} has been created`, 4000);
 

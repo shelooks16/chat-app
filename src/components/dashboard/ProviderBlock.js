@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tag, Icon, Button, Alert } from 'rsuite';
-import firebase from 'firebase/app';
+import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../misc/firebase';
 
 const ProviderBlock = () => {
@@ -54,10 +54,10 @@ const ProviderBlock = () => {
   };
 
   const linkFacebook = () => {
-    link(new firebase.auth.FacebookAuthProvider());
+    link(new FacebookAuthProvider());
   };
   const linkGoogle = () => {
-    link(new firebase.auth.GoogleAuthProvider());
+    link(new GoogleAuthProvider());
   };
 
   return (

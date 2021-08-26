@@ -1,17 +1,24 @@
 import React from 'react';
-import firebase from 'firebase/app';
+import {
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  getAdditionalUserInfo,
+} from 'firebase/auth';
 import { Container, Grid, Row, Panel, Col, Button, Icon, Alert } from 'rsuite';
+import { ref, serverTimestamp } from 'firebase/database';
 import { auth, database } from '../misc/firebase';
 
 const SignIn = () => {
   const signInWithProvider = async provider => {
     try {
-      const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
+      const credential = await signInWithPopup(auth, provider);
+      const userMeta = getAdditionalUserInfo(credential);
 
-      if (additionalUserInfo.isNewUser) {
-        await database.ref(`/profiles/${user.uid}`).set({
-          name: user.displayName,
-          createdAt: firebase.database.ServerValue.TIMESTAMP,
+      if (userMeta.isNewUser) {
+        await ref(database, `/profiles/${credential.user.uid}`).set({
+          name: credential.user.displayName,
+          createdAt: serverTimestamp(),
         });
       }
 
@@ -22,11 +29,11 @@ const SignIn = () => {
   };
 
   const onFacebookSignIn = () => {
-    signInWithProvider(new firebase.auth.FacebookAuthProvider());
+    signInWithProvider(new FacebookAuthProvider());
   };
 
   const onGoogleSignIn = () => {
-    signInWithProvider(new firebase.auth.GoogleAuthProvider());
+    signInWithProvider(new GoogleAuthProvider());
   };
 
   return (

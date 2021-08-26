@@ -1,3 +1,4 @@
+import { ref, update } from 'firebase/database';
 import React from 'react';
 import { Drawer, Button, Divider, Alert } from 'rsuite';
 import { useProfile } from '../../context/profile.context';
@@ -19,7 +20,7 @@ const Dashboard = ({ onSignOut }) => {
         database
       );
 
-      await database.ref().update(updates);
+      await update(ref(database), updates);
 
       Alert.success('Nickname has been updated', 4000);
     } catch (err) {

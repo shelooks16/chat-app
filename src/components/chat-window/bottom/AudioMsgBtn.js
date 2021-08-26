@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { InputGroup, Icon, Alert } from 'rsuite';
 import { ReactMic } from 'react-mic';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../../misc/firebase';
 
 const AudioMsgBtn = ({ afterUpload }) => {
@@ -17,17 +18,18 @@ const AudioMsgBtn = ({ afterUpload }) => {
     async data => {
       setIsUploading(true);
       try {
-        const snap = await storage
-          .ref(`/chat/${chatId}`)
-          .child(`audio_${Date.now()}.mp3`)
-          .put(data.blob, {
+        const snap = await uploadBytes(
+          ref(storage, `/chat/${chatId}/audio_${Date.now()}.mp3`),
+          data.blob,
+          {
             cacheControl: `public, max-age=${3600 * 24 * 3}`,
-          });
+          }
+        );
 
         const file = {
           contentType: snap.metadata.contentType,
           name: snap.metadata.name,
-          url: await snap.ref.getDownloadURL(),
+          url: await getDownloadURL(snap.ref),
         };
 
         setIsUploading(false);
