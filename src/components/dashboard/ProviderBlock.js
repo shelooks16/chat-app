@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Tag, Icon, Button, Alert } from 'rsuite';
-import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  linkWithPopup,
+  unlink,
+} from 'firebase/auth';
 import { auth } from '../../misc/firebase';
 
 const ProviderBlock = () => {
@@ -22,13 +27,13 @@ const ProviderBlock = () => {
     });
   };
 
-  const unlink = async providerId => {
+  const unlinkProvider = async providerId => {
     try {
       if (auth.currentUser.providerData.length === 1) {
         throw new Error(`You can not disconnect from ${providerId}`);
       }
 
-      await auth.currentUser.unlink(providerId);
+      await unlink(auth.currentUser, providerId);
       updateIsConnected(providerId, false);
       Alert.info(`Disconnected from ${providerId}`, 4000);
     } catch (err) {
@@ -37,15 +42,15 @@ const ProviderBlock = () => {
   };
 
   const unlinkFacebook = () => {
-    unlink('facebook.com');
+    unlinkProvider('facebook.com');
   };
   const unlinkGoogle = () => {
-    unlink('google.com');
+    unlinkProvider('google.com');
   };
 
-  const link = async provider => {
+  const linkProvider = async provider => {
     try {
-      await auth.currentUser.linkWithPopup(provider);
+      await linkWithPopup(auth.currentUser, provider);
       Alert.info(`Linked to ${provider.providerId}`, 4000);
       updateIsConnected(provider.providerId, true);
     } catch (err) {
@@ -54,10 +59,10 @@ const ProviderBlock = () => {
   };
 
   const linkFacebook = () => {
-    link(new FacebookAuthProvider());
+    linkProvider(new FacebookAuthProvider());
   };
   const linkGoogle = () => {
-    link(new GoogleAuthProvider());
+    linkProvider(new GoogleAuthProvider());
   };
 
   return (
