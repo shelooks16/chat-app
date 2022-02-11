@@ -7,7 +7,7 @@
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
     "firebase": "^9.0.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react": "^17.0.2",
     "react-avatar-editor": "^12.0.0",
     "react-dom": "^17.0.2",
